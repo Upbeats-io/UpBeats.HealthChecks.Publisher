@@ -1,0 +1,40 @@
+ version: 2.1
+
+ orbs:
+  win: circleci/windows@2.2.0
+
+ workflows:
+   build:
+     jobs:
+       - build:
+          context:
+            - Nuget
+            - PublicGitHub
+
+ jobs:
+   build:
+     executor: 
+         name : win/default       
+         shell: bash.exe
+     steps:
+       - checkout
+       - run: echo "pipeline.id - << pipeline.id >> | pipeline.number - << pipeline.number >> | pipeline.git.branch - << pipeline.git.branch >>"
+       - run:
+          name: Install Cake
+          command : |
+              export PATH="$PATH:$HOME/.dotnet/tools"
+              dotnet tool install --global --configfile nuget.config Cake.Tool
+       - run:
+          name: Build, Test & Package
+          command : |
+               export PATH="$PATH:$HOME/.dotnet/tools"
+               cd buildscripts
+               dotnet cake --IsLocalBuild=false --Branch=<< pipeline.git.branch >> --Revision=<< pipeline.number >>
+       - run:
+          name: Tag & Publish
+          command : |
+               export PATH="$PATH:$HOME/.dotnet/tools"
+               git config --global url."https://github.com/".insteadOf git@github.com:
+               git config --global url."https://".insteadOf git://
+               cd buildscripts
+               dotnet cake --IsLocalBuild=false --Branch=<< pipeline.git.branch >> --Revision=<< pipeline.number >> --target=TagAndPublish --nuGetPackageSource=https://api.nuget.org/v3/index.json --nuGetApiKey=${NUGET_APIKEY} --GitUser=${GITHUB_USERNAME} --GitPassword=${GITHUB_PASSWORD}
