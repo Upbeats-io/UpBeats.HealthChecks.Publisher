@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Build", "_Build", "{DFD389
 	ProjectSection(SolutionItems) = preProject
 		buildscripts\build.cake = buildscripts\build.cake
 		.circleci\config.yml = .circleci\config.yml
+		version.txt = version.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpBeats.HealthChecks.Publisher", "src\UpBeats.HealthChecks.Publisher\UpBeats.HealthChecks.Publisher.csproj", "{9AFF1467-7165-4670-BAD3-39FAB0DD1D7C}"
