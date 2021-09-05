@@ -37,4 +37,4 @@
                git config --global url."https://github.com/".insteadOf git@github.com:
                git config --global url."https://".insteadOf git://
                cd buildscripts
-               dotnet cake --IsLocalBuild=false --Branch=<< pipeline.git.branch >> --Revision=<< pipeline.number >> --target=TagAndPublish --nuGetPackageSource=https://api.nuget.org/v3/index.json --nuGetApiKey=${NUGET_APIKEY} --GitUser=${GITHUB_USERNAME} --GitPassword=${GITHUB_PASSWORD}
+               dotnet cake --IsLocalBuild=false --Branch=<< pipeline.git.branch >> --Revision=<< pipeline.number >> --target=TagAndPublish --nuGetPackageSource=UpBeatsIO --nuGetApiKey=az --GitUser=${GITHUB_USERNAME} --GitPassword=${GITHUB_PASSWORD}
