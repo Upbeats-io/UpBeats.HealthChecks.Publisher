@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System;
 using UpBeats.ApiClient;
 
 namespace UpBeats.HealthChecks.Publisher.DependencyInjection
@@ -15,10 +16,14 @@ namespace UpBeats.HealthChecks.Publisher.DependencyInjection
         /// </remarks>
         /// <param name="builder">The <see cref="IHealthChecksBuilder"/>.</param>
         /// <param name="options">Specifies configuration used to publish to UpBeats</param>
-        /// <param name="defaultTags">Specifies a collection of tags to send with the custom check and metric.</param>
         /// <returns>The <see cref="IHealthChecksBuilder"/>.</returns>
-        public static IHealthChecksBuilder AddUpBeatsPublisher(this IHealthChecksBuilder builder, UpBeatsHealthCheckPublisherOptions options, string[] defaultTags = default)
+        public static IHealthChecksBuilder AddUpBeatsPublisher(this IHealthChecksBuilder builder, UpBeatsHealthCheckPublisherOptions options)
         {
+            builder.Services.Configure<HealthCheckPublisherOptions>(options =>
+            {
+                options.Delay = TimeSpan.FromSeconds(5);
+            });
+
             builder.Services
                 .AddSingleton<IHealthCheckPublisher>(sp =>
                 {
