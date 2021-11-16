@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using Newtonsoft.Json;
     using UpBeats.ApiClient.Model;
 
     public static class HealthReportMapper
@@ -50,10 +51,29 @@
         {
             if (entry.Data?.Any() == true)
             {
-                return entry.Data.ToDictionary(x => x.Key, x => x.Value.ToString());
+                return entry.Data.ToDictionary(x => x.Key, x => StringValue(x.Value));
             }
 
             return null;
+        }
+
+        private static string StringValue(object value)
+        {
+            try
+            {
+                return value.ToString();
+            }
+            catch
+            {
+                try
+                {
+                    return JsonConvert.SerializeObject(value);
+                }
+                catch(Exception ex)
+                {
+                    return ex.Message;
+                }
+            }
         }
 
         private static SeverityLevel MapStatus(HealthStatus status)
